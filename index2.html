@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: Helvetica;
+    }
+	 
+    svg {
+        width: 1250px;
+        height: 500px;
+		text-anchor: end;
+		fill: white;
+		font: 14px sans-serif;
+    }
+    
+	.play-button {
+        margin-left: 10px;
+        margin-bottom: 15px;
+        font-style: italic;
+        cursor: pointer;
+        color: grey;
+    }
+    
+	.play-button:hover {
+        color: black;
+		font-weight: bold;
+    }
+    
+	.buttons-container {
+        width: 1300px;
+		position : absolute;
+        left : 300px;
+    } 
+	
+	.container {
+        width: 100px;
+        margin-bottom: 25px;
+    }
+
+	 
+    .button {
+        float: left;
+        margin-left: 10px;
+        font-weight: lighter;
+        cursor: pointer;
+		background: #3498db;
+		background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+		background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+		background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+		background-image: -o-linear-gradient(top, #3498db, #2980b9);
+		background-image: linear-gradient(to bottom, #3498db, #2980b9);
+		-webkit-border-radius: 18;
+		-moz-border-radius: 18;
+		border-radius: 50%;
+		font-family: Arial;
+		color: #ffffff;
+		font-size: 15px;
+		padding: 5px 10px 5px 10px;
+		text-decoration: none;
+    }
+	
+	.button:hover {
+	    background: #3cb0fd;
+	    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	    text-decoration: none;
+	}
+	
+	.play-button {
+		position : absolute;
+    	background: #3498db;
+		background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+		background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+		background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+		background-image: -o-linear-gradient(top, #3498db, #2980b9);
+		background-image: linear-gradient(to bottom, #3498db, #2980b9);
+		-webkit-border-radius: 20;
+		-moz-border-radius: 20;
+		border-radius: 20px;
+		font-family: Arial;
+		color: #ffffff;
+		font-size: 12px;
+	    padding: 8px 16px 8px 16px;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.play-button:hover {
+	    background: #3cb0fd;
+	    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	    text-decoration: none;
+		cursor: pointer;
+	}	
+    
+	.selected {
+		background: Grey;
+		font-style: italic;
+    }
+    
+	.bar {
+        fill: grey;
+		margin-left:auto; 
+		margin-right:auto; 
+		display:block;
+    }
+	 
+	rect {
+		fill: steelblue;
+	}
+	
+</style>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+<script>
+
+     var year = "1960";
+
+	 var barHeight = 40;
+	 
+     var buttonYears = ["1960", "1970", "1980", "1990", "2000", "2010", "2020", "2030", "2040", "2050"];
+
+     var margin = {top: 30, right: 0, bottom: 0, left: 100},
+          width = 1100 - margin.left - margin.left,
+          height = 450 - margin.top - margin.bottom;
+
+     var body = d3.select("body");
+
+     var x = d3.scale.linear()
+          .range([25, width]);
+
+     var y = d3.scale.ordinal()
+          .rangeBands([0, height], 0.2, 0);
+
+     body.append("h2")
+               .text("Top 10 Populated Countries of the World 1960-2050");
+
+     var playAll = body.append("div")
+          .attr("class", "play-button")
+          .text("▶ PLAY ALL Countries");
+
+     var buttons = body.append("div")
+          .attr("class", "buttons-container")
+          .selectAll("div").data(buttonYears)
+		  .enter().append("div")
+          .text(function(d) { return d; })
+          .attr("class", function(d) {
+               if(d == year)
+                    return "button selected";
+               else
+                    return "button";
+          });
+
+
+    d3.csv("data/top10mostpopulatedcountries.csv", function(error, data){
+	
+	var ten = [""];
+		  		
+    var popData = data.filter(function(element) {return element.Year == year});
+		  
+    x.domain([0, d3.max(data, function(d) { return d.Rank; })]);
+	
+    var svg = body.append("svg")
+               .attr("width", width )
+               .attr("height", height );
+			   
+	var bar = svg.selectAll("g")
+			  .data(popData)
+			  .enter().append("g")
+			  .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+	bar.append("rect")
+               .attr("y", 50)
+               .attr("width", function(d) {return  x(d.Rank);})
+               .attr("height", barHeight - 1);
+			   
+	bar.append("text")
+      .attr("x", function(d) { return  x(d.Rank) - 10; })
+      .attr("y", 50 + barHeight / 2)
+      .attr("dy", ".35em")
+      .text(function(d) { ten.push(d.Country); return d.Country; });
+
+	
+	buttons.on("click", function(d) { update(d);
+               clearInterval(playInterval);
+          });
+
+    var playInterval;
+
+    playAll.on("click", function() {
+               var i = 0;
+
+               playInterval = setInterval(function() {
+                    update(buttonYears[i]);
+                    i++;
+                    if(i > buttonYears.length - 1) {
+                         clearInterval(playInterval);
+                    }	
+               }, 1500);
+    });
+
+    function update(updateYear) {
+
+			var one = [""];
+			d3.select("svg").remove();
+            d3.select(".selected")
+                    .classed("selected", false);
+
+            buttons.filter(function(d) { return d == updateYear; })
+                    .classed("selected", true)
+
+            popData = data.filter(function(element) {return element.Year == updateYear});
+
+			x.domain([0, d3.max(data, function(d) { return d.Rank; })]);
+
+			svg = body.append("svg")
+               .attr("width", width + margin.left + margin.right)
+               .attr("height", height + margin.top + margin.bottom);
+			   
+			var bar = svg.selectAll("g")
+			  .data(popData)
+			  .enter().append("g")
+			  .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+			bar.append("rect")
+               .attr("y", 50)
+               .attr("width", function(d) {return x(d.Rank)})
+               .attr("height", barHeight - 1)
+			   .style("fill", function(d) { 
+					if (ten.indexOf(d.Country)<1) {return "brown"} else {return "steelblue"};});
+			   
+			bar.append("text")
+			  .attr("x", function(d) { return x(d.Rank) - 10; })
+			  .attr("y", 50 + barHeight / 2)
+			  .attr("dy", ".35em")
+			  .text(function(d) { one.push(d.Country); return d.Country; });	
+
+			ten = one;
+			one = [""];			
+    };	
+	
+});
+</script>
+</body>
+</html>

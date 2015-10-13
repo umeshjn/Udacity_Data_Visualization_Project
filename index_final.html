@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+
+	h2 {
+		display: block;
+		font-size: 1.5em;
+		-webkit-margin-before: 0.67em;
+		-webkit-margin-after: 0.67em;
+		-webkit-margin-start: 0px;
+		-webkit-margin-end: 0px;
+		font-weight: bold;
+		margin-top: 0px;
+		margin-bottom : 0px;
+		text-align: center;
+		font-variant: small-caps;
+	}
+	
+	h3 {
+		display: block;
+		font-size: 1.2em;
+		-webkit-margin-before: 0.67em;
+		-webkit-margin-after: 0.67em;
+		-webkit-margin-start: 0px;
+		-webkit-margin-end: 0px;
+		font-weight: bold;
+		margin-top: 0px;
+		margin-bottom : 0px;
+		font-variant: small-caps;
+		
+	}
+	
+	.tag {
+		text-align : center;
+		font-variant: small-caps;
+		color: gray;
+		margin-top: 0px;
+		margin-bottom : 0px;
+	}
+	
+	.data {
+		font-variant: small-caps;
+		//color: gray;
+		font-size: 18px;
+		margin-bottom : 0px;
+	}
+	
+	.summary-wrapper  {
+		display: block;
+	}
+	
+	.value {
+		display: block;
+		font-size: 16px;
+		margin: 9px 0 10px 0;
+		font-weight: bold;
+		color: #454545;
+	}
+	.summary {
+		float: left;
+		width: 65px;
+		margin: 4px 15px 10px 6px;
+		font-size: 15px;
+		color: gray;
+		font-variant: small-caps;
+		text-align : center;
+	}
+	
+    body {
+        font-family: Helvetica;
+    }
+    
+	svg {
+        width: 1250px;
+        height: 400px;
+		text-anchor: end;
+		fill: white;
+		font: 15px sans-serif;
+		font-variant: small-caps;
+		margin-left:auto; 
+		margin-right:auto; 
+		display:block;
+    }
+    
+   
+	.buttons-container {
+        width: 1000px;		  
+		position : absolute;
+		left : 300px;
+    }
+	 
+	.container {
+        width: 100px;
+        margin-bottom: 25px;
+    }
+	 
+    .button {
+        float: left;
+        margin-left: 10px;
+        font-weight: lighter;
+        cursor: pointer;
+		background: #3498db;
+		background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+		background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+		background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+		background-image: -o-linear-gradient(top, #3498db, #2980b9);
+		background-image: linear-gradient(to bottom, #3498db, #2980b9);
+		-webkit-border-radius: 18;
+		-moz-border-radius: 18;
+		border-radius: 50%;
+		font-family: Arial;
+		color: #ffffff;
+		font-size: 15px;
+		padding: 5px 10px 5px 10px;
+		text-decoration: none;
+    }
+	
+	.button:hover {
+	    background: #3cb0fd;
+	    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	    text-decoration: none;
+	}
+	
+	.play-button {
+		position : absolute;
+    	background: #3498db;
+		background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+		background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+		background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+		background-image: -o-linear-gradient(top, #3498db, #2980b9);
+		background-image: linear-gradient(to bottom, #3498db, #2980b9);
+		-webkit-border-radius: 20;
+		-moz-border-radius: 20;
+		border-radius: 20px;
+		font-family: Arial;
+		color: #ffffff;
+		font-size: 12px;
+	    padding: 8px 16px 8px 16px;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.play-button:hover {
+	    background: #3cb0fd;
+	    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+	    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	    text-decoration: none;
+		cursor: pointer;
+	}
+    
+	.selected {
+		background: Grey;
+		font-style: italic;
+    }
+
+    .bar {
+        fill: grey;
+		margin-left:auto; 
+		margin-right:auto; 
+		display:block;
+    }
+
+	rect {
+		fill: steelblue;
+	}
+	 
+	rect:hover {
+		fill: brown;
+	}
+	
+</style>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+
+	<h2>Pyramid of Top 10 Most Populated Countries of the World(1960 to 2050)</h2>
+	<p class="tag">Who were? Who are? Who will be?</p>
+	<br>
+    <h3>Number of times each Countries in Top 10 between 1960 to 2050</h3>
+      <div class="summary" id="China">China<span class="value">10</span></div>
+      <div class="summary" id="India">India<span class="value">10</span></div>
+	  <div class="summary" id="USA">USA<span class="value">10</span></div>
+	  <div class="summary" id="Indonesia">Indonesia<span class="value">10</span></div>
+	  <div class="summary" id="Brazil">Brazil<span class="value">10</span></div>
+	  <div class="summary" id"Bangladesh">Bangladesh<span class="value">10</span></div>
+	  <div class="summary" id="Pakistan">Pakistan<span class="value">9</span></div>
+	  <div class="summary" id="Russia">Russia<span class="value">7</span></div>
+	  <div class="summary" id="Nigeria">Nigeria<span class="value">7</span></div>
+	  <div class="summary" id="Japan">Japan<span class="value">6</span></div>	  
+	  <div class="summary" id="Mexico">Mexico<span class="value">3</span></div>
+	  <div class="summary" id="Ethopia">Ethopia<span class="value">3</span></div>
+	  <div class="summary" id="Germany">Germany<span class="value">3</span></div>
+	  <div class="summary" id="United Kingdom">UK<span class="value">1</span></div>
+	  <div class="summary" id="Philippines">Philippines<span class="value">1</span></div>
+	<br>
+	<br>
+	<br>
+	<p class="data">Click <b>Play All</b> to see how the top 10 countries change over time and Countries entering top 10 will be displayed in <b>brown</b>. You can also click on the <b>individual years</b> to see the ranking for specific years. </p>
+	<br>
+	
+<script>
+
+    var year = "1960";
+	var barHeight = 35;
+	var buttonYears = ["1960", "1970", "1980", "1990", "2000", "2010", "2020", "2030", "2040", "2050"];
+	var margin = {top: 30, right: 0, bottom: 0, left: 100},
+                 width = 1100 - margin.left - margin.left,
+                 height = 450 - margin.top - margin.bottom;
+
+    var body = d3.select("body");
+
+	//Creating the button to play the visualization for all the countries
+	var playAll = body.append("div")
+          .attr("class", "play-button")
+          .text("▶ PLAY ALL");
+		  
+	//Creating the buttons for individual years
+    var buttons = body.append("div")
+          .attr("class", "buttons-container")
+          .selectAll("div").data(buttonYears)
+		  .enter().append("div")
+          .text(function(d) { return d; })
+          .attr("class", function(d) {
+               if(d == year)
+                    return "button selected";
+               else
+                    return "button";
+          });
+
+
+    d3.csv("data/top10mostpopulatedcountries.csv", function(error, data){
+	
+		var first = [""];	
+		//Filter the dataset to extract only the countries which are in top 10 for the selected/default year
+		var popData = data.filter(function(element) {return element.Year == year}); 
+		
+		var svg = body.append("svg")
+				   .attr("width", width )
+				   .attr("height", height );
+			   
+		var bar = svg.selectAll("g")
+				   .data(popData)
+				   .enter().append("g")
+				   .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+		
+		//Creating the pyramid style structure
+		bar.append("rect")
+				.attr("y", 40)
+				.attr("x", function(d) {return width/1.6 - (d.Rank * 40)})
+				.attr("width", function(d) {return d.Rank * 80})
+				.attr("height", barHeight - 1);
+		
+		//adding the name of the countries in the middle of the pyramid bars 
+		bar.append("text")
+				.attr("x", function(d) {return width/1.6 + 20})
+				.attr("y", 40 + barHeight / 2)
+				.attr("dy", ".35em")
+				.text(function(d) { first.push(d.Country); return d.Country; });
+		
+		buttons.on("click", function(d) { moveon(d);
+				   clearInterval(playInterval);
+		});
+
+		var playInterval;
+
+		playAll.on("click", function() {
+				var i = 0;
+				playInterval = setInterval(function() {
+					update(buttonYears[i]);
+					i++;
+					if(i > buttonYears.length - 1) {
+					    clearInterval(playInterval);
+					}	
+				}, 1500);
+		});
+	
+        function update(updateYear) {
+			//Variables to keep track of the new countries entrying the top 10
+			var second = [""];			
+			var third = first;
+			//Remove the svg element to recreate the pyramid 			
+			d3.select("svg").remove();
+			
+            d3.select(".selected")
+                    .classed("selected", false);
+            buttons.filter(function(d) { return d == updateYear; })
+                    .classed("selected", true);
+					
+			//Filter the dataset to extract only the countries which are in top 10 for the selected/default year
+            popData = data.filter(function(element) {return element.Year == updateYear});
+			
+			svg = body.append("svg")
+               .attr("width", width + margin.left + margin.right)
+               .attr("height", height + margin.top + margin.bottom);
+			   
+			var bar = svg.selectAll("g")
+			  .data(popData)
+			  .enter().append("g")
+			  .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+			//Creating the pyramid style structure
+			bar.append("rect")
+               .attr("y", 40)
+               .attr("x", function(d) {return width/1.6 - (d.Rank * 40)})
+               .attr("width", function(d) {return d.Rank * 80})
+               .attr("height", barHeight - 1)
+			   .style("fill", function(d) { 
+					if (third.indexOf(d.Country)<1) {return "brown"} else {return "steelblue"};});
+					
+			bar.append("text")
+			    .attr("x", function(d) {return width/1.6 + 20})
+			    .attr("y", 40 + barHeight / 2)
+			    .attr("dy", ".35em")
+			    .text(function(d) { second.push(d.Country); return d.Country; });	
+			
+			third = second;
+			second = [""];
+        };	
+	
+		function moveon(updateYear) {
+	
+            d3.select(".selected")
+                    .classed("selected", false);
+					
+			d3.select("svg").remove();
+
+            buttons.filter(function(d) { return d == updateYear; })
+                    .classed("selected", true)
+
+            popData = data.filter(function(element) {return element.Year == updateYear});
+
+			svg = body.append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom);
+			   
+			var bar = svg.selectAll("g")
+			    .data(popData)
+			    .enter().append("g")
+			    .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+			bar.append("rect")
+                .attr("y", 40)
+                .attr("x", function(d) {return width/1.6 - (d.Rank * 40)})
+                .attr("width", function(d) {return d.Rank * 80})
+			    .attr("height", barHeight - 1);
+			  
+			bar.append("text")
+			    .attr("x", function(d) {return width/1.6 + 20})
+			    .attr("y", 40 + barHeight / 2)
+			    .attr("dy", ".35em")
+			    .text(function(d) { return d.Country; });
+		
+		};	
+	
+	});
+</script>
+</body>
+</html>
